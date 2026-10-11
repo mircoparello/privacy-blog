@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Contact — Francesca Bucci"
+  description="Get in touch about privacy questions, projects, or just to compare notes."
+>
+  <section class="hero" style="padding-top: 72px; padding-bottom: 72px;">
+    <div class="container-prose">
+      <span class="eyebrow eyebrow--accent">Contact</span>
+      <h1 class="hero__title" style="font-size: clamp(40px, 6vw, 68px); margin-top: 24px;">
+        Let's talk<br /><em>privacy.</em>
+      </h1>
+      <p class="hero__lede" style="max-width: 560px;">
+        I read every email. Whether you've got a thorny compliance question,
+        a project you'd like an extra pair of eyes on, or you just want to
+        compare notes with a fellow practitioner — write.
+      </p>
+
+      <a href="mailto:Francesca@example.com" class="contact-email" style="margin-top: 16px;">
+        Francesca@example.com
+        <span class="contact-email__arrow">→</span>
+      </a>
+
+      <div style="margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--line); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px;">
+        <div>
+          <p class="eyebrow" style="margin-bottom: 8px;">Topics I love</p>
+          <p style="color: var(--ink-soft); font-size: 15px;">DPIAs, AI Act compliance, vendor management, privacy engineering.</p>
+        </div>
+        <div>
+          <p class="eyebrow" style="margin-bottom: 8px;">Response time</p>
+          <p style="color: var(--ink-soft); font-size: 15px;">Usually within a few days. Longer if it's a busy week.</p>
+        </div>
+        <div>
+          <p class="eyebrow" style="margin-bottom: 8px;">Languages</p>
+          <p style="color: var(--ink-soft); font-size: 15px;">English, Italian, French.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,150 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import ArticleList from '../components/ArticleList.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const all = await getCollection('articles');
+const sorted = all.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const featured = sorted.find((a) => a.data.featured) ?? sorted[0];
+const rest = sorted.filter((a) => a.slug !== featured.slug).slice(0, 4);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<Base
+  title="Privacy Out Loud"
+  description="A data protection professional writing about GDPR, the EU AI Act, privacy engineering, and what comes next for digital rights."
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__main reveal">
+        <p class="eyebrow eyebrow--accent hero__eyebrow">Privacy · Data Protection · Ethics · Digital Rights</p>
+        <h1 class="hero__title">
+          Domande umane<br />
+          su <em>questioni digitali.</em>
+        </h1>
+        <p class="hero__lede">
+          I'm Francesca — a data protection professional working in industry,
+          exploring the edges of GDPR, the EU AI Act, and what comes next.
+          I write to think clearly, and to find the others who care about
+          this work.
+        </p>
+        <div class="hero__actions">
+          <a href={`${base}/articles`} class="btn btn-primary">Read the latest</a>
+          <a href={`${base}/contact`} class="btn btn-ghost">Get in touch</a>
+        </div>
+      </div>
+      <aside class="hero__aside reveal" style="animation-delay: 0.15s">
+        <div class="aside-card">
+          <p class="aside-card__label">Aree di interesse</p>
+          <ul class="aside-card__list">
+            <li>EU AI Act</li>
+            <li>GDPR</li>
+            <li>Post-Schrems transfer mechanisms</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Featured -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">In evidenza</span>
+          <h2>Una nuova impressione</h2>
+        </div>
+        <a href={`${base}/articles`} class="btn-link">All articles →</a>
+      </div>
+      <article class="featured">
+        <div class="featured__meta">
+          <span class="tag-accent">{featured.data.topic}</span>
+          <span>·</span>
+          <span>{fmt(featured.data.pubDate)}</span>
+          <span>·</span>
+          <span>{featured.data.readingTime}</span>
+        </div>
+        <h3 class="featured__title">
+          <a href={`${base}/articles/${featured.slug}`}>{featured.data.title}</a>
+        </h3>
+        <p class="featured__excerpt">{featured.data.description}</p>
+        <a href={`${base}/articles/${featured.slug}`} class="btn-link">Read article →</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Recent writing -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">Articoli recenti</span>
+          <h2>Altre impressioni</h2>
+        </div>
+      </div>
+      <ArticleList articles={rest} startIndex={2} />
+    </div>
+  </section>
+
+  <!-- About preview -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">About</span>
+          <h2>Chi scrive</h2>
+        </div>
+        <a href={`${base}/about`} class="btn-link">Full bio →</a>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            I work as a <strong>data protection professional</strong> inside a
+            technology company, where I run DPIAs, untangle vendor contracts,
+            and try to make privacy something engineers want to build for —
+            not a form they fill in at the end.
+          </p>
+          <p>
+            This blog is where I think out loud about the field: the rules
+            that are changing, the ones that aren't working, and the
+            frontiers — AI, federated learning, biometric inference — where
+            the old playbook is starting to crack.
+          </p>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat__num">5+</div>
+            <div class="stat__label">Anni in privacy</div>
+          </div>
+          <div class="stat">
+            <div class="stat__num">CIPP/E</div>
+            <div class="stat__label">IAPP certified</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA -->
+  <section class="section" style="border-top: none;">
+    <div class="container">
+      <div class="contact-cta">
+        <h2>Hai domande,<br /><em>o un progetto in mente?</em></h2>
+        <p>
+          Sono sempre felice di confrontarmi con professionisti del settore o di analizzare casi relativi
+          talk through a tricky compliance question. The inbox is open.
+        </p>
+        <a href="mailto:Francesca@example.com" class="contact-email">
+          Contattami
+          <span class="contact-email__arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

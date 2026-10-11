@@ -1,0 +1,17 @@
+---
+const year = new Date().getFullYear();
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<footer class="site-footer">
+  <div class="container footer__inner">
+    <p class="footer__copy">
+      © {year} Privacy Out Loud
+    </p>
+    <div class="footer__links">
+      <a href={`${base}/articles`}>Articoli</a>
+      <a href={`${base}/about`}>Chi sono</a>
+      <a href="mailto:Francesca@example.com">Email</a>
+    </div>
+  </div>
+</footer>

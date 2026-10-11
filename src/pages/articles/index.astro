@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ArticleList from '../../components/ArticleList.astro';
+
+const articles = (await getCollection('articles')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const allTags = [...new Set(articles.flatMap(a => a.data.tags))].sort();
+---
+
+<Base
+  title="Articles — Francesca Bucci"
+  description="Long-form writing on GDPR, the EU AI Act, privacy engineering, and the frontiers of digital privacy."
+>
+  <header class="page-header">
+    <div class="container-prose">
+      <span class="eyebrow eyebrow--accent">The archive</span>
+      <h1>Articles.</h1>
+      <p>Long-form notes from the field — written when something is worth getting right.</p>
+    </div>
+  </header>
+
+  <div class="container" style="padding-bottom: 96px;">
+    <div class="filter-bar" id="tag-filter-bar">
+      <button class="filter-btn is-active" data-filter="all">All</button>
+      {allTags.map(tag => (
+        <button class="filter-btn" data-filter={tag}>{tag}</button>
+      ))}
+    </div>
+
+    <ArticleList articles={articles} startIndex={1} />
+  </div>
+
+  <script is:inline>
+    (function () {
+      const buttons = document.querySelectorAll('.filter-btn');
+      const items = document.querySelectorAll('.article-list > li');
+      if (!buttons.length || !items.length) return;
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+
+          const filter = btn.getAttribute('data-filter');
+
+          items.forEach(item => {
+            const tags = (item.getAttribute('data-tags') || '').split(',').filter(Boolean);
+            if (filter === 'all' || tags.includes(filter)) {
+              item.style.display = '';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+    })();
+  </script>
+</Base>
