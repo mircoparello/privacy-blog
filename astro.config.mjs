@@ -1,10 +1,8 @@
 import { defineConfig } from 'astro/config';
 
-// For a USER page (https://username.github.io/) or custom domain, keep base as '/'.
-// For a PROJECT page (https://username.github.io/repo-name/), change base to '/repo-name'.
 export default defineConfig({
-  site: 'https://yourusername.github.io',
-  base: '/',
+  site: 'https://mircoparello.github.io',
+  base: '/privacy-blog',
   build: {
     inlineStylesheets: 'auto', // inline small CSS for faster first paint
   },
