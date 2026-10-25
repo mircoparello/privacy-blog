@@ -411,14 +411,23 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .theme-toggle { width: 34px; height: 34px; }
 
   .hero { padding-top: 24px; padding-bottom: 40px; }
+  .hero__grid { gap: 28px; }
+  .hero__aside { padding-top: 20px; }
   .hero__eyebrow { margin-bottom: 20px; }
+  .aside-card__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+    row-gap: 8px;
+  }
+  .aside-card__list li { font-size: 13px; }
   .section { padding-top: 32px; padding-bottom: 32px; }
 
   .article-header { padding-top: 22px; padding-bottom: 0; }
   .article-back { margin-bottom: 22px; }
   .article-meta {
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
     gap: 4px 10px;
     margin-bottom: 18px;
@@ -426,6 +435,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     line-height: 1.5;
     letter-spacing: 0.1em;
   }
+  .article-meta .topic { grid-column: 1 / -1; }
   .article-meta .dot { display: none; }
   .article-title { margin-bottom: 16px; }
 
@@ -434,4 +444,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .prose-page { padding-bottom: 56px; }
   .more-articles { padding-top: 32px; padding-bottom: 48px; }
   .site-footer { padding-top: 32px; padding-bottom: 24px; }
+}
+
+@media (max-width: 480px) {
+  .hero__actions { flex-direction: column; }
+  .hero__actions .btn { width: 100%; justify-content: center; }
 }
