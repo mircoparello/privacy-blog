@@ -1,17 +1,13 @@
 ---
+import { SITE, url } from '../lib/site';
 const year = new Date().getFullYear();
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <footer class="site-footer">
-  <div class="container footer__inner">
-    <p class="footer__copy">
-      © {year} Privacy Out Loud
-    </p>
-    <div class="footer__links">
-      <a href={`${base}/articles`}>Articoli</a>
-      <a href={`${base}/about`}>Chi sono</a>
-      <a href="mailto:Francesca@example.com">Contatti</a>
-    </div>
-  </div>
+  <span>© {year} {SITE.name}</span>
+  <nav aria-label="Footer">
+    <a href={url('/articles')}>Articoli</a>
+    <a href={url('/about')}>Chi sono</a>
+    <a href={`mailto:${SITE.email}`}>Contatti</a>
+  </nav>
 </footer>

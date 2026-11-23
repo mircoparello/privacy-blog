@@ -1,65 +1,63 @@
 ---
 import Base from '../layouts/Base.astro';
+import Row from '../components/Row.astro';
+import { SITE } from '../lib/site';
 ---
 
-<Base
-  title="Chi sono — Francesca Bucci"
-  description="Pagina di presentazione"
->
-  <header class="page-header">
-    <div class="container-prose">
-      <span class="eyebrow eyebrow--accent">Chi sono</span>
-      <h1>I work in privacy.<br /><em>I write to understand it.</em></h1>
-      <p>Practitioner notes from someone who's been inside the machine long enough to know where it squeaks.</p>
-    </div>
-  </header>
+<Base title={`Chi sono — ${SITE.author}`} description="Pagina di presentazione">
+  <div class="wrap">
+    <Row num="§" label="Chi sono" class="row--tight" as="header">
+      <h1 class="title-lg">I work in privacy.<br /><span class="accent">I write to understand it.</span></h1>
+      <p class="lede">Practitioner notes from someone who's been inside the machine long enough to know where it squeaks.</p>
+    </Row>
 
-  <div class="prose-page">
-    <div class="container-prose">
-      <p>
-        Sono Francesca, ho 30 anni e da cinque lavoro nel campo della protezione dei dati
-        personali, con un interesse particolare per le nuove tecnologie e per il loro impatto sui diritti
-        umani.
-        Cinque anni di esperienza sono abbastanza per iniziare ad avere delle opinioni, ma non
-        abbastanza per convincermi che siano sempre quelle giuste. Un equilibrio che, per ora, mi
-        va bene.
-      </p>
+    <Row label="Profilo" class="row--flush">
+      <div class="prose">
+        <p>
+          Sono Francesca, ho 30 anni e da cinque lavoro nel campo della protezione dei dati
+          personali, con un interesse particolare per le nuove tecnologie e per il loro impatto sui diritti
+          umani.
+          Cinque anni di esperienza sono abbastanza per iniziare ad avere delle opinioni, ma non
+          abbastanza per convincermi che siano sempre quelle giuste. Un equilibrio che, per ora, mi
+          va bene.
+        </p>
 
-      <h2>Perché scrivo</h2>
-      <p>
-        Perché lavorare come professionista della privacy significa confrontarsi ogni giorno con
-        domande che raramente hanno risposte semplici, e scoprire che «dipende» è spesso la
-        risposta più corretta, anche se decisamente la meno soddisfacente.
-        Questo spazio, quindi, nasce come una sorta di flusso di coscienza, che utilizzo per mettere
-        a fuoco alcune idee, mettere in discussione qualche certezza e, possibilmente, alimentare il
-        confronto su questioni che ci riguardano tutti.
-        Anche chi continua a sostenere di non avere nulla da nascondere.
-      </p>
+        <h2>Perché scrivo</h2>
+        <p>
+          Perché lavorare come professionista della privacy significa confrontarsi ogni giorno con
+          domande che raramente hanno risposte semplici, e scoprire che «dipende» è spesso la
+          risposta più corretta, anche se decisamente la meno soddisfacente.
+          Questo spazio, quindi, nasce come una sorta di flusso di coscienza, che utilizzo per mettere
+          a fuoco alcune idee, mettere in discussione qualche certezza e, possibilmente, alimentare il
+          confronto su questioni che ci riguardano tutti.
+          Anche chi continua a sostenere di non avere nulla da nascondere.
+        </p>
 
-      <h2>Di cosa parlo</h2>
-      <p>
-        Parlo di privacy, ma anche di libertà, identità digitale, etica dei dati, nuove tecnologie e del
-        rapporto, non sempre pacifico, tra persone e algoritmi.
-        Mi interessano soprattutto le questioni aperte, i casi concreti e quelle zone grigie in cui la
-        tecnologia corre, il diritto prova a starle dietro e noi cerchiamo di capire cosa stia
-        succedendo.
-      </p>
+        <h2>Di cosa parlo</h2>
+        <p>
+          Parlo di privacy, ma anche di libertà, identità digitale, etica dei dati, nuove tecnologie e del
+          rapporto, non sempre pacifico, tra persone e algoritmi.
+          Mi interessano soprattutto le questioni aperte, i casi concreti e quelle zone grigie in cui la
+          tecnologia corre, il diritto prova a starle dietro e noi cerchiamo di capire cosa stia
+          succedendo.
+        </p>
 
-      <h2>Cosa non troverai</h2>
-      <p>
-        Verità assolute, soluzioni universali o l'  ennesima guida definitiva alla privacy.
-        Questo non è un manuale, né un sito accademico. È uno spazio personale, aperto a
-        chiunque abbia voglia di ragionare, confrontarsi e guardare alla protezione dei dati non
-        soltanto come un insieme di regole, ma come una questione di persone, diritti e scelte.
-        E no, quello che scrivo non è una consulenza legale.
-      </p>
+        <h2>Cosa non troverai</h2>
+        <p>
+          Verità assolute, soluzioni universali o l'ennesima guida definitiva alla privacy.
+          Questo non è un manuale, né un sito accademico. È uno spazio personale, aperto a
+          chiunque abbia voglia di ragionare, confrontarsi e guardare alla protezione dei dati non
+          soltanto come un insieme di regole, ma come una questione di persone, diritti e scelte.
+          E no, quello che scrivo non è una consulenza legale.
+        </p>
 
-      <h2>Get in touch</h2>
-      <p>
-        Se qualcosa che hai letto ti ha fatto sorgere una domanda, un dubbio o anche soltanto
-        voglia di dissentire, scrivimi:
-        <a href="mailto:privacyoutloud@gmail.com" style="color: var(--accent);">privacyoutloud@gmail.com</a>.
-      </p>
-    </div>
+        <h2>Scrivimi</h2>
+        <p>
+          Se qualcosa che hai letto ti ha fatto sorgere una domanda, un dubbio o anche soltanto
+          voglia di dissentire, scrivimi:
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+        </p>
+      </div>
+    </Row>
   </div>
 </Base>

@@ -4,7 +4,6 @@ description: "The AI Act doesn't replace GDPR — it sits on top of it. Here's w
 pubDate: 2025-03-14
 topic: "EU AI Act"
 tags: ["AI Act", "GDPR", "Governance", "DPIA"]
-readingTime: "12 min read"
 featured: true
 ---
 

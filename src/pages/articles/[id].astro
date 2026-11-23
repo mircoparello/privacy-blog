@@ -1,0 +1,122 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Row from '../../components/Row.astro';
+import ArticleIndex from '../../components/ArticleIndex.astro';
+import { SITE, url, getArticles, formatDate, readingTime, type Article } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return articles.map((article) => ({ params: { id: article.id }, props: { article } }));
+}
+
+interface Props {
+  article: Article;
+}
+const { article } = Astro.props;
+const { Content, headings } = await render(article);
+const toc = headings.filter((h) => h.depth === 2);
+const others = (await getArticles()).filter((a) => a.id !== article.id).slice(0, 3);
+const { title, description, topic, tags, pubDate } = article.data;
+---
+
+<Base
+  title={`${title} — ${SITE.author}`}
+  description={description}
+  type="article"
+  publishedTime={pubDate}
+  ogImage={`/og/${article.id}.png`}
+>
+  <div class="wrap">
+    <header class="article-head">
+      <a class="back" href={url('/articles')}>← Tutti gli articoli</a>
+      <h1 class="title-lg">{title}</h1>
+      <p class="lede">{description}</p>
+      <dl class="sheet">
+        <div><dt>Tema</dt><dd>{topic}</dd></div>
+        <div><dt>Data</dt><dd><time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time></dd></div>
+        <div><dt>Lettura</dt><dd>{readingTime(article)}</dd></div>
+        <div><dt>Tag</dt><dd>{tags.length ? tags.join(', ') : '—'}</dd></div>
+      </dl>
+    </header>
+
+    <div class="article-body">
+      <aside>
+        {toc.length > 1 && (
+          <nav class="toc toc--side" aria-label="Indice">
+            <p>Indice</p>
+            <ol>
+              {toc.map((h, i) => <li><span>{i + 1}.</span><a href={`#${h.slug}`}>{h.text}</a></li>)}
+            </ol>
+          </nav>
+        )}
+      </aside>
+      <div>
+        {toc.length > 1 && (
+          <details class="toc toc--inline">
+            <summary>Indice</summary>
+            <ol>
+              {toc.map((h, i) => <li><span>{i + 1}.</span><a href={`#${h.slug}`}>{h.text}</a></li>)}
+            </ol>
+          </details>
+        )}
+        <article class="prose">
+          <Content />
+        </article>
+        <div class="author">
+          <span class="avatar" aria-hidden="true">{SITE.initials}</span>
+          <div><strong>{SITE.author}</strong>{SITE.authorBio}</div>
+        </div>
+      </div>
+    </div>
+
+    {others.length > 0 && (
+      <Row num="→" label="Continua a leggere">
+        <ArticleIndex articles={others} />
+      </Row>
+    )}
+  </div>
+
+  <!-- Highlights the table-of-contents entry of the section being read. -->
+  <script is:inline>
+    (() => {
+      const links = [...document.querySelectorAll('.toc a[href^="#"]')];
+      if (!links.length) return;
+      const headings = [...document.querySelectorAll('.prose h2[id]')];
+      let current = null;
+      let queued = false;
+
+      const update = () => {
+        queued = false;
+        const threshold = Math.min(160, window.innerHeight * 0.3);
+        const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+        let active = null;
+        for (const h of headings) {
+          if (h.getBoundingClientRect().top <= threshold) active = h.id;
+          else break;
+        }
+        // Near the end of the page the last section may never reach the threshold.
+        if (atBottom && active && headings.length) active = headings[headings.length - 1].id;
+        if (active === current) return;
+        current = active;
+        for (const a of links) {
+          if (a.hash === `#${active}`) a.setAttribute('aria-current', 'true');
+          else a.removeAttribute('aria-current');
+        }
+      };
+
+      const schedule = () => {
+        if (!queued) {
+          queued = true;
+          requestAnimationFrame(update);
+        }
+      };
+      window.addEventListener('scroll', schedule, { passive: true });
+      window.addEventListener('resize', schedule, { passive: true });
+      // Opening a link to a section jumps there after this script has run.
+      window.addEventListener('load', update);
+      window.addEventListener('hashchange', update);
+      update();
+    })();
+  </script>
+</Base>

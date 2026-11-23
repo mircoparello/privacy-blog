@@ -1,111 +1,64 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import ArticleList from '../components/ArticleList.astro';
+import Row from '../components/Row.astro';
+import ArticleIndex from '../components/ArticleIndex.astro';
+import { SITE, url, articleUrl, getArticles, formatDateShort, readingTime } from '../lib/site';
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const articles = await getArticles();
+const featured = articles.find((a) => a.data.featured) ?? articles[0];
+const rest = articles.filter((a) => a.id !== featured?.id).slice(0, 4);
 
-const all = await getCollection('articles');
-const sorted = all.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-const featured = sorted.find((a) => a.data.featured) ?? sorted[0];
-const rest = sorted.filter((a) => a.slug !== featured.slug).slice(0, 4);
-
-const fmt = (d: Date) =>
-  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+const interests = [
+  'Cultura della privacy',
+  'Etica dei dati',
+  'Libertà e riservatezza',
+  'Consapevolezza digitale',
+];
 ---
 
-<Base
-  title="Privacy Out Loud"
-  description="A data protection professional writing about GDPR, the EU AI Act, privacy engineering, and what comes next for digital rights."
->
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container hero__grid">
-      <div class="hero__main reveal">
-        <p class="eyebrow eyebrow--accent hero__eyebrow">Privacy · Data Protection · Ethics · Digital Rights</p>
-        <h1 class="hero__title">
-          Domande umane<br />
-          su <em>questioni digitali.</em>
-        </h1>
-        <div class="hero__actions">
-          <a href={`${base}/articles`} class="btn btn-primary">Read the latest</a>
-          <a href={`${base}/contact`} class="btn btn-ghost">Get in touch</a>
-        </div>
+<Base title={SITE.name}>
+  <div class="wrap">
+    <Row num="§ 0" label="Premessa">
+      <h1 class="display">Domande umane su <em>questioni digitali.</em></h1>
+      <ul class="interests" aria-label="Aree di interesse">
+        {interests.map((i) => <li>{i}</li>)}
+      </ul>
+      <div class="actions">
+        <a class="btn btn--solid" href={url('/articles')}>Leggi gli articoli →</a>
+        <a class="btn" href={url('/contact')}>Scrivimi</a>
       </div>
-      <aside class="hero__aside reveal" style="animation-delay: 0.15s">
-        <div class="aside-card">
-          <p class="aside-card__label">Aree di interesse</p>
-          <ul class="aside-card__list">
-            <li>Cultura della privacy</li>
-            <li>Etica dei dati</li>
-            <li>Libertà e riservatezza</li>
-            <li>Persone e tecnologia</li>
-            <li>Consapevolezza digitale</li>
+    </Row>
 
-          </ul>
-        </div>
-      </aside>
-    </div>
-  </section>
+    {featured && (
+      <Row num="§ 1" label="In evidenza">
+        <h2 class="h2">Una nuova impressione</h2>
+        <article class="featured">
+          <div>
+            <h3><a href={articleUrl(featured)}>{featured.data.title}</a></h3>
+            <p>{featured.data.description}</p>
+            <a class="more" href={articleUrl(featured)}>Leggi l'articolo →</a>
+          </div>
+          <dl class="meta">
+            <dt>Data</dt><dd><time datetime={featured.data.pubDate.toISOString()}>{formatDateShort(featured.data.pubDate)}</time></dd>
+            <dt>Tema</dt><dd>{featured.data.topic}</dd>
+            <dt>Lettura</dt><dd>{readingTime(featured)}</dd>
+          </dl>
+        </article>
+      </Row>
+    )}
 
-  <!-- Featured -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">In evidenza</span>
-          <h2>Una nuova impressione</h2>
-        </div>
-        <a href={`${base}/articles`} class="btn-link">All articles →</a>
-      </div>
-      <article class="featured">
-        <div class="featured__meta">
-          <span class="tag-accent">{featured.data.topic}</span>
-          <span>·</span>
-          <span>{fmt(featured.data.pubDate)}</span>
-          <span>·</span>
-          <span>{featured.data.readingTime}</span>
-        </div>
-        <h3 class="featured__title">
-          <a href={`${base}/articles/${featured.slug}`}>{featured.data.title}</a>
-        </h3>
-        <p class="featured__excerpt">{featured.data.description}</p>
-        <a href={`${base}/articles/${featured.slug}`} class="btn-link">Read article →</a>
-      </article>
-    </div>
-  </section>
+    {rest.length > 0 && (
+      <Row num="§ 2" label="Articoli recenti">
+        <h2 class="h2">Altre impressioni</h2>
+        <ArticleIndex articles={rest} prefix="2." />
+        <a class="more" href={url('/articles')}>Tutti gli articoli →</a>
+      </Row>
+    )}
 
-  <!-- Recent writing -->
-  <section class="section">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">Articoli recenti</span>
-          <h2>Altre impressioni</h2>
-        </div>
-      </div>
-      <ArticleList articles={rest} startIndex={2} />
-    </div>
-  </section>
-
-  <!-- About preview -->
-
-
-  <!-- Contact CTA -->
-  <section class="section" style="border-top: none;">
-    <div class="container">
-      <div class="contact-cta">
-        <h2>Le idee migliori,<br /><em>nascono dal confronto</em></h2>
-        <p>
-          Hai una domanda, un&#39;esperienza da condividere o un punto di vista diverso? 
-          Non tenerlo per te.
-        </p>
-        <a href="mailto:Francesca@example.com" class="contact-email">
-          Parliamone
-          <span class="contact-email__arrow">→</span>
-        </a>
-      </div>
-    </div>
-  </section>
+    <Row num="§ 3" label="Contatti" class="cta">
+      <h2>Le idee migliori, nascono dal confronto</h2>
+      <p>Hai una domanda, un'esperienza da condividere o un punto di vista diverso? Non tenerlo per te.</p>
+      <a class="email" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    </Row>
+  </div>
 </Base>

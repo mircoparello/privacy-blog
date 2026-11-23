@@ -1,59 +1,48 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import ArticleList from '../../components/ArticleList.astro';
+import Row from '../../components/Row.astro';
+import ArticleIndex from '../../components/ArticleIndex.astro';
+import { SITE, getArticles } from '../../lib/site';
 
-const articles = (await getCollection('articles')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
-
-const allTags = [...new Set(articles.flatMap(a => a.data.tags))].sort();
+const articles = await getArticles();
+const tags = [...new Set(articles.flatMap((a) => a.data.tags))].sort((a, b) => a.localeCompare(b, 'it'));
 ---
 
 <Base
-  title="Articles — Francesca Bucci"
+  title={`Articoli — ${SITE.author}`}
   description="Approfondimenti su GDPR, AI Act europeo, e nuove frontiere della privacy digitale."
 >
-  <header class="page-header">
-    <div class="container-prose">
-      <span class="eyebrow eyebrow--accent">Archivio</span>
-      <h1>Articoli</h1>
-      <p>Long-form notes from the field — written when something is worth getting right.</p>
-    </div>
-  </header>
+  <div class="wrap">
+    <Row num="§" label="Archivio" class="row--tight" as="header">
+      <h1 class="title-lg">Articoli</h1>
+      <p class="lede">Long-form notes from the field — written when something is worth getting right.</p>
+    </Row>
 
-  <div class="container" style="padding-bottom: 96px;">
-    <div class="filter-bar" id="tag-filter-bar">
-      <button class="filter-btn is-active" data-filter="all">All</button>
-      {allTags.map(tag => (
-        <button class="filter-btn" data-filter={tag}>{tag}</button>
-      ))}
-    </div>
-
-    <ArticleList articles={articles} startIndex={1} />
+    <Row label={`${articles.length} articoli`} class="row--tight">
+      {tags.length > 0 && (
+        <div class="filters" role="group" aria-label="Filtra per tag">
+          <button type="button" data-tag="" aria-pressed="true">Tutti</button>
+          {tags.map((t) => <button type="button" data-tag={t} aria-pressed="false">{t}</button>)}
+        </div>
+      )}
+      <ArticleIndex articles={articles} />
+    </Row>
   </div>
 
   <script is:inline>
-    (function () {
-      const buttons = document.querySelectorAll('.filter-btn');
-      const items = document.querySelectorAll('.article-list > li');
-      if (!buttons.length || !items.length) return;
-
-      buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          buttons.forEach(b => b.classList.remove('is-active'));
-          btn.classList.add('is-active');
-
-          const filter = btn.getAttribute('data-filter');
-
-          items.forEach(item => {
-            const tags = (item.getAttribute('data-tags') || '').split(',').filter(Boolean);
-            if (filter === 'all' || tags.includes(filter)) {
-              item.style.display = '';
-            } else {
-              item.style.display = 'none';
-            }
-          });
+    (() => {
+      const bar = document.querySelector('.filters');
+      if (!bar) return;
+      const buttons = [...bar.querySelectorAll('button')];
+      const items = [...document.querySelectorAll('.index > li')];
+      bar.classList.add('is-ready');
+      bar.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const tag = btn.dataset.tag;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        items.forEach((li) => {
+          li.hidden = Boolean(tag) && !JSON.parse(li.dataset.tags || '[]').includes(tag);
         });
       });
     })();

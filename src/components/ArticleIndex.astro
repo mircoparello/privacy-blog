@@ -1,0 +1,27 @@
+---
+import { articleUrl, formatDateShort, readingTime, type Article } from '../lib/site';
+
+interface Props {
+  articles: Article[];
+  /** Prefix for the row number, e.g. "2." gives 2.1, 2.2… Without it: 01, 02… */
+  prefix?: string;
+}
+const { articles, prefix } = Astro.props;
+const number = (i: number) => (prefix ? `${prefix}${i + 1}` : String(i + 1).padStart(2, '0'));
+---
+
+<ol class="index">
+  {articles.map((a, i) => (
+    <li data-tags={JSON.stringify(a.data.tags)}>
+      <a href={articleUrl(a)}>
+        <span class="n">{number(i)}</span>
+        <span class="title">{a.data.title}</span>
+        <span class="info">
+          <span class="t">{a.data.topic}</span>
+          <time class="d" datetime={a.data.pubDate.toISOString()}>{formatDateShort(a.data.pubDate)}</time>
+          <span class="r">{readingTime(a)}</span>
+        </span>
+      </a>
+    </li>
+  ))}
+</ol>

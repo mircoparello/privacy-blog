@@ -1,15 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+import Row from '../components/Row.astro';
+import { SITE, url } from '../lib/site';
 ---
 
-<Base title="Not found — Francesca Bucci" description="Page not found.">
-  <div class="notfound">
-    <div>
-      <div class="notfound__code">404</div>
-      <h1>This page doesn't exist.</h1>
-      <p>Maybe it was redacted. Maybe it never was. Either way —</p>
-      <a href={`${base}/`} class="btn btn-primary">Back home →</a>
-    </div>
+<Base title={`Pagina non trovata — ${SITE.author}`} description="Pagina non trovata.">
+  <div class="wrap">
+    <Row num="§ 404" label="Non trovata" as="header">
+      <p class="code-404" aria-hidden="true">404</p>
+      <h1 class="h2" style="margin-top: 16px">Questa pagina non esiste.</h1>
+      <p class="lede">Forse è stata oscurata. Forse non è mai esistita. In ogni caso —</p>
+      <div class="actions">
+        <a class="btn btn--solid" href={url('/')}>Torna alla home →</a>
+      </div>
+    </Row>
   </div>
 </Base>

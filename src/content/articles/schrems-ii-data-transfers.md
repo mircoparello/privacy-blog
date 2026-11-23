@@ -4,7 +4,6 @@ description: "Five years on, the post-Schrems II transfer landscape has settled 
 pubDate: 2025-01-22
 topic: "Cross-Border Transfers"
 tags: ["Schrems II", "Transfers", "SCCs"]
-readingTime: "9 min read"
 featured: false
 ---
 

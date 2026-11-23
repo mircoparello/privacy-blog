@@ -1,0 +1,15 @@
+---
+/** A dossier section: a margin label (number + name) and its content. */
+interface Props {
+  num?: string;
+  label: string;
+  class?: string;
+  as?: 'section' | 'header' | 'div';
+}
+const { num, label, class: className, as: Tag = 'section' } = Astro.props;
+---
+
+<Tag class:list={['row', className]}>
+  <div class="label" aria-hidden="true">{num && <b>{num}</b>}{label}</div>
+  <div><slot /></div>
+</Tag>

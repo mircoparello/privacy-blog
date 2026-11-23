@@ -1,51 +1,84 @@
 ---
+import { Font } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SITE, url } from '../lib/site';
 import '../styles/global.css';
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
+  /** Path (without base) of the social preview image. */
+  ogImage?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
 }
 
-const { title, description } = Astro.props;
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const {
+  title,
+  description = SITE.description,
+  ogImage = '/og/default.png',
+  type = 'website',
+  publishedTime,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const image = new URL(url(ogImage), Astro.site);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="it">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
-    <link rel="apple-touch-icon" href={`${base}/favicon.svg`} />
-    <link rel="mask-icon" href={`${base}/favicon.svg`} color="#1D4ED8" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#fafaf8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href={url('/favicon.ico')} sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+    <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
+    <link rel="manifest" href={url('/site.webmanifest')} />
+    <meta name="generator" content={Astro.generator} />
 
+    <!-- Open Graph / social previews -->
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+    {type === 'article' && <meta property="article:author" content={SITE.author} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <Font cssVariable="--font-sans" preload />
+    <Font cssVariable="--font-mono" />
+    <Font cssVariable="--font-serif" />
+
+    <!-- Theme: follow the system unless the visitor picked one explicitly. -->
     <script is:inline>
-      (function () {
-        try {
-          const stored = localStorage.getItem('theme');
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const theme = stored || (prefersDark ? 'dark' : 'light');
-          document.documentElement.classList.toggle('dark', theme === 'dark');
-        } catch (e) {}
-      })();
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
     </script>
   </head>
   <body>
-    <Header />
-    <main>
+    <a class="skip-link" href="#content">Vai al contenuto</a>
+    <div class="wrap">
+      <Header />
+    </div>
+    <main id="content">
       <slot />
     </main>
-    <Footer />
+    <div class="wrap">
+      <Footer />
+    </div>
   </body>
 </html>
