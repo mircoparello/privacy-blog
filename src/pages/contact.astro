@@ -7,19 +7,9 @@ import { SITE } from '../lib/site';
 <Base title={`Contatti — ${SITE.author}`} description="Contattami per parlare di privacy">
   <div class="wrap">
     <Row num="§" label="Contatti" as="header" class="cta">
-      <h1 class="title-lg">Parliamo di <span class="accent">privacy.</span></h1>
-      <p>
-        Leggo ogni email. Che tu abbia una questione di compliance spinosa, un progetto su cui
-        vorresti un secondo parere o semplicemente voglia di confrontarti con una collega del
-        settore: scrivimi.
-      </p>
+      <h2 style="margin-top: 24px">Le idee migliori <span class="accent">nascono dal confronto</span></h2>
+      <p>Hai una domanda, un'esperienza da condividere o un punto di vista diverso? Non tenerlo per te.</p>
       <a class="email" href={`mailto:${SITE.email}`}>{SITE.email}</a>
-
-      <dl class="sheet sheet--text sheet--stack" style="--cols: 3; margin-top: 56px">
-        <div><dt>Temi che mi appassionano</dt><dd>DPIA, conformità all'AI Act, gestione dei fornitori, privacy engineering.</dd></div>
-        <div><dt>Tempi di risposta</dt><dd>Di solito entro qualche giorno. Di più, se è una settimana intensa.</dd></div>
-        <div><dt>Lingue</dt><dd>Inglese, italiano, francese.</dd></div>
-      </dl>
     </Row>
   </div>
 </Base>

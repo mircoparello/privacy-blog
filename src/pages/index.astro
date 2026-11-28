@@ -31,7 +31,7 @@ const interests = [
 
     {featured && (
       <Row num="§ 1" label="In evidenza">
-        <h2 class="h2">Una nuova impressione</h2>
+        <h2 class="h2">Articolo più recente</h2>
         <article class="featured">
           <div>
             <h3><a href={articleUrl(featured)}>{featured.data.title}</a></h3>
@@ -49,16 +49,10 @@ const interests = [
 
     {rest.length > 0 && (
       <Row num="§ 2" label="Articoli recenti">
-        <h2 class="h2">Altre impressioni</h2>
+        <h2 class="h2">Altri articoli</h2>
         <ArticleIndex articles={rest} prefix="2." />
         <a class="more" href={url('/articles')}>Tutti gli articoli →</a>
       </Row>
     )}
-
-    <Row num="§ 3" label="Contatti" class="cta">
-      <h2>Le idee migliori, nascono dal confronto</h2>
-      <p>Hai una domanda, un'esperienza da condividere o un punto di vista diverso? Non tenerlo per te.</p>
-      <a class="email" href={`mailto:${SITE.email}`}>{SITE.email}</a>
-    </Row>
   </div>
 </Base>
